@@ -22,15 +22,11 @@ public class Main {
                     addStates(TM,nStates, bufferedReader);
                 }
                 if(line.contains("alphabet")){
-                    System.out.println(line);
-
+                    addTrasitions(TM, bufferedReader);
                 }
             }
-            Iterator<String> states = TM.getStates().iterator();
-            while(states.hasNext()){
-                System.out.println(states.next());
-            }
-
+            printTM(TM);
+            System.out.println(TM.Run("f"));
             // Always close files.
         } catch (FileNotFoundException e){
             System.out.println(e.getMessage());
@@ -41,7 +37,6 @@ public class Main {
     }
     private static void addStates(TuringMachine TM, int nStates, BufferedReader bufferedReader) throws IOException{
         String line = "";
-        System.out.println("states:" + nStates);
 
         for (int i = 0; i < nStates; i++) {
             line = bufferedReader.readLine();
@@ -52,17 +47,39 @@ public class Main {
                 TM.setStartState(content[0]);
 
             }
-            System.out.println(content.length);
             if(content.length >1){
-                System.out.println(content[0]);
-                System.out.println("accept");
                 TM.addState(content[0],content[1]);
 
             } else {
-                System.out.println(content[0]);
                 TM.addState(content[0], "-");
 
             }
+        }
+    }
+
+    private static void addTrasitions(TuringMachine TM, BufferedReader bufferedReader) throws IOException{
+        String line = "";
+        while((line = bufferedReader.readLine()) != null) {
+            String[] content = line.split(" ");
+            TM.addTransition(new Transition(content[0],content[1].charAt(0),content[2],content[3].charAt(0),content[4].charAt(0)));
+        }
+    }
+
+    private static void printTM(TuringMachine TM){
+        Iterator<String> states = TM.getStates().iterator();
+        while(states.hasNext()){
+            System.out.println(states.next());
+        }
+        Iterator<Transition> transitionIterator = TM.getTransitionTable().iterator();
+        while (transitionIterator.hasNext()){
+            Transition trans = transitionIterator.next();
+            System.out.println("read state:" +trans.getReadState());
+            System.out.println("read sym:" +trans.getReadSymbol());
+            System.out.println("write state:" +trans.getWriteState());
+            System.out.println("write sym:" +trans.getWriteSymbol());
+            System.out.println("move dir:" +trans.getMoveDirection());
+            System.out.println("---------");
+
         }
     }
 }

@@ -1,13 +1,13 @@
 public class Transition {
     private String readState;
-    private String readSymbol;
+    private char readSymbol;
 
     private String writeState;
-    private String writeSymbol;
+    private char writeSymbol;
 
     private char moveDirection; //R right, L left, S stay
 
-    public Transition(String rState,String rSymbol, String wState, String wSymbol, char mDirection){
+    public Transition(String rState,char rSymbol, String wState, char wSymbol, char mDirection){
         this.readState = rState;
         this.readSymbol = rSymbol;
         this.writeState = wState;
@@ -19,7 +19,7 @@ public class Transition {
         return readState;
     }
 
-    public String getReadSymbol() {
+    public char getReadSymbol() {
         return readSymbol;
     }
 
@@ -27,7 +27,7 @@ public class Transition {
         return writeState;
     }
 
-    public String getWriteSymbol() {
+    public char getWriteSymbol() {
         return writeSymbol;
     }
 
