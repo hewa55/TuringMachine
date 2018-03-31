@@ -22,45 +22,54 @@ public class TuringMachine {
         CurrentSymbol = 0;
     }
 
-    public boolean addState(String name, String accepting){
+    public void addState(String name, String accepting){
         if(accepting.equals("+")) {
             States.add(name);
             acceptingStates.add(name);
         } else {
             States.add(name);
         }
-        return true;
+        //return true;
     }
 
-    public boolean addTransition(Transition transition){
-        if(!States.contains(transition.getReadState()) || !States.contains(transition.getWriteState())){
-            return false;
-        }
+    public void addTransition(Transition transition){
+        //if(!States.contains(transition.getReadState()) || !States.contains(transition.getWriteState())){
+        //    return false;
+        //}
         TransitionTable.add(transition);
-        return true;
+        //return true;
     }
 
-    public boolean setStartState(String name){
+    public void setStartState(String name){
         StartState = name;
-        return true;
     }
 
-    public boolean Run(String input){
+    public boolean Run(String input, boolean steps){
         CurrentState = StartState;
         Tape = input;
-        Transition currentTrasition = null;
-        boolean foundTransition = false;
-        Iterator<Transition> TrasitionIterator = TransitionTable.iterator();
+
+
         while(!acceptingStates.contains(CurrentState)) {
-            while (TrasitionIterator.hasNext()) {
-                currentTrasition = TrasitionIterator.next();
+            Iterator<Transition> TransitionIterator = TransitionTable.iterator();
+            Transition currentTrasition = null;
+            boolean foundTransition = false;
+            if(steps){
+                System.out.println("_________");
+                System.out.println("Tape: "+Tape + " at "+ CurrentSymbol+" which is "+ Tape.charAt(CurrentSymbol) +" in state " + CurrentState);
+            }
+
+            while (TransitionIterator.hasNext()) {
+                currentTrasition = TransitionIterator.next();
+
                 if (currentTrasition.getReadState().equals(CurrentState) && currentTrasition.getReadSymbol() == Tape.charAt(CurrentSymbol)) {
                     foundTransition = true;
                     break;
                 }
             }
             if (!foundTransition) {
-                System.out.println("no valid transition found");
+                if(steps){
+                    System.out.println("no valid transition found");
+                }
                 return false;
             } else {
                 CurrentState = currentTrasition.getWriteState();
@@ -68,7 +77,7 @@ public class TuringMachine {
                 switch (currentTrasition.getMoveDirection()) {
                     case 'R':
                         tape.setCharAt(CurrentSymbol, currentTrasition.getWriteSymbol());
-                        if (CurrentSymbol == tape.length()) {
+                        if (CurrentSymbol == tape.length()-1) {
                             tape = new StringBuilder(tape + "_");
                         }
                         CurrentSymbol++;
@@ -85,16 +94,41 @@ public class TuringMachine {
                         tape.setCharAt(CurrentSymbol, currentTrasition.getWriteSymbol());
                         break;
                 }
+                Tape = tape.toString();
             }
         }
+        reset_machine();
         return true;
     }
 
+    private void reset_machine(){
+        this.Tape = "";
+        this.CurrentSymbol = 0;
+
+    }
     public Set<String> getStates() {
         return States;
     }
 
     public Set<Transition> getTransitionTable() {
         return TransitionTable;
+    }
+
+    public void printTM(){
+        Iterator<String> states = this.States.iterator();
+        while(states.hasNext()){
+            System.out.println(states.next());
+        }
+        Iterator<Transition> transitionIterator = this.TransitionTable.iterator();
+        while (transitionIterator.hasNext()){
+            Transition trans = transitionIterator.next();
+            System.out.println("read state:" +trans.getReadState());
+            System.out.println("read sym:" +trans.getReadSymbol());
+            System.out.println("write state:" +trans.getWriteState());
+            System.out.println("write sym:" +trans.getWriteSymbol());
+            System.out.println("move dir:" +trans.getMoveDirection());
+            System.out.println("---------");
+
+        }
     }
 }
