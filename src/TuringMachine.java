@@ -44,14 +44,16 @@ public class TuringMachine {
         StartState = name;
     }
 
-    public boolean Run(String input, boolean steps){
+    public int Run(String input, boolean steps) {
         CurrentState = StartState;
         Tape = input;
+        int transition_counter = 0;
 
 
         while(!acceptingStates.contains(CurrentState)) {
+            transition_counter++;
             Iterator<Transition> TransitionIterator = TransitionTable.iterator();
-            Transition currentTrasition = null;
+            Transition currentTransition = null;
             boolean foundTransition = false;
             if(steps){
                 System.out.println("_________");
@@ -59,9 +61,9 @@ public class TuringMachine {
             }
 
             while (TransitionIterator.hasNext()) {
-                currentTrasition = TransitionIterator.next();
+                currentTransition = TransitionIterator.next();
 
-                if (currentTrasition.getReadState().equals(CurrentState) && currentTrasition.getReadSymbol() == Tape.charAt(CurrentSymbol)) {
+                if (currentTransition.getReadState().equals(CurrentState) && currentTransition.getReadSymbol() == Tape.charAt(CurrentSymbol)) {
                     foundTransition = true;
                     break;
                 }
@@ -71,20 +73,20 @@ public class TuringMachine {
                     System.out.println("no valid transition found");
                 }
                 reset_machine();
-                return false;
+                return -1;
             } else {
-                CurrentState = currentTrasition.getWriteState();
+                CurrentState = currentTransition.getWriteState();
                 StringBuilder tape = new StringBuilder(Tape);
-                switch (currentTrasition.getMoveDirection()) {
+                switch (currentTransition.getMoveDirection()) {
                     case 'R':
-                        tape.setCharAt(CurrentSymbol, currentTrasition.getWriteSymbol());
+                        tape.setCharAt(CurrentSymbol, currentTransition.getWriteSymbol());
                         if (CurrentSymbol == tape.length()-1) {
                             tape = new StringBuilder(tape + "_");
                         }
                         CurrentSymbol++;
                         break;
                     case 'L':
-                        tape.setCharAt(CurrentSymbol, currentTrasition.getWriteSymbol());
+                        tape.setCharAt(CurrentSymbol, currentTransition.getWriteSymbol());
                         if (CurrentSymbol == 0) {
                             tape = new StringBuilder("_" + tape);
                         } else {
@@ -92,14 +94,14 @@ public class TuringMachine {
                         }
                         break;
                     case 'S':
-                        tape.setCharAt(CurrentSymbol, currentTrasition.getWriteSymbol());
+                        tape.setCharAt(CurrentSymbol, currentTransition.getWriteSymbol());
                         break;
                 }
                 Tape = tape.toString();
             }
         }
         reset_machine();
-        return true;
+        return transition_counter;
     }
 
     private void reset_machine(){
