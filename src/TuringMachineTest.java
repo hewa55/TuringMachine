@@ -72,7 +72,6 @@ class PalindromeTest {
 
 class AdditionTests {
     private TuringMachine TM_addition;
-
     @BeforeEach
     void TuringMachine() {
         TM_addition = new TuringMachineFactory().BuildTuringMachine("addition.txt");
@@ -90,7 +89,6 @@ class AdditionTests {
     void spec_example3() {
         assertTrue(TM_addition.Run("00#111#111", false));
     }
-
     @Test
     void spec_example1_false() {
         assertFalse(TM_addition.Run("0#0", false));
@@ -104,7 +102,6 @@ class AdditionTests {
         assertFalse(TM_addition.Run("000#111#11", false));
     }
     // ----- extra tests
-
     @Test
     void empty() {
         assertTrue(TM_addition.Run("##", false));
@@ -121,7 +118,6 @@ class AdditionTests {
     void secondonly() {
         assertTrue(TM_addition.Run("#01#01", false));
     }
-
     @Test
     void secondonlywithzero() {
         assertTrue(TM_addition.Run("0#11#11", false));
