@@ -70,6 +70,7 @@ public class TuringMachine {
                 if(steps){
                     System.out.println("no valid transition found");
                 }
+                reset_machine();
                 return false;
             } else {
                 CurrentState = currentTrasition.getWriteState();

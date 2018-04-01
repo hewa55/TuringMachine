@@ -12,8 +12,12 @@ public class Main {
         String input_file = args[1];
         TuringMachineFactory TMF = new TuringMachineFactory();
         TuringMachine TM = TMF.BuildTuringMachine(TM_description);
-        System.out.println(TM.Run("111",true));
-        System.out.println(TM.Run("1111",false));
-
+        System.out.println(TM.Run("1#0#1",false));
+        System.out.println(TM.Run("0#0#0",false));
+        System.out.println(TM.Run("00#00#00",false));
+        System.out.println(TM.Run("1#1#01",false));
+        System.out.println(TM.Run("1#01#11",false));
+        System.out.println(TM.Run("00#111#111",false));
+        System.out.println(TM.Run("11#11#011",false));
     }
 }

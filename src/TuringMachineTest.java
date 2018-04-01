@@ -77,7 +77,7 @@ class AdditionTests {
     void TuringMachine() {
         TM_addition = new TuringMachineFactory().BuildTuringMachine("addition.txt");
     }
-
+    // ----- given in specs
     @Test
     void spec_example1() {
         assertTrue(TM_addition.Run("0#0#0", false));
@@ -93,14 +93,46 @@ class AdditionTests {
 
     @Test
     void spec_example1_false() {
-        assertTrue(TM_addition.Run("0#0", false));
+        assertFalse(TM_addition.Run("0#0", false));
     }
     @Test
     void spec_example2_false() {
-        assertTrue(TM_addition.Run("0#0#1", false));
+        assertFalse(TM_addition.Run("0#0#1", false));
     }
     @Test
     void spec_example3_false() {
-        assertTrue(TM_addition.Run("000#111#11", false));
+        assertFalse(TM_addition.Run("000#111#11", false));
+    }
+    // ----- extra tests
+
+    @Test
+    void empty() {
+        assertTrue(TM_addition.Run("##", false));
+    }
+    @Test
+    void firstonly() {
+        assertTrue(TM_addition.Run("01#0#01", false));
+    }
+    /* is this valid?
+    @Test
+    void secondonly() {
+        assertTrue(TM_addition.Run("0#01#01", false));
+    }
+     */
+    @Test
+    void secondonly() {
+        assertTrue(TM_addition.Run("0#01#01", false));
+    }
+    @Test
+    void simplecarry() {
+        assertTrue(TM_addition.Run("1#1#01", false));
+    }
+    @Test
+    void doublecarry() {
+        assertTrue(TM_addition.Run("11#11#011", false));
+    }
+    @Test
+    void complicatedcarry() {
+        assertTrue(TM_addition.Run("101#111#0011", false));
     }
 }
