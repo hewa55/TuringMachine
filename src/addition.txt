@@ -87,5 +87,7 @@ s19 1 s12 y L
 s0 # s2 # R
 s2 # s20 # R
 s20 y s20 y R
+s20 0 s5 0 S
 s20 _ s21 _ R
 s9 # s7 # R
+s6 _ s1 _ R

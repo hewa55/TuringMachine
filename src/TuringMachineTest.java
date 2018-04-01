@@ -111,17 +111,20 @@ class AdditionTests {
     }
     @Test
     void firstonly() {
+        assertTrue(TM_addition.Run("01##01", false));
+    }
+    @Test
+    void firstonlywithzero() {
         assertTrue(TM_addition.Run("01#0#01", false));
     }
-    /* is this valid?
     @Test
     void secondonly() {
-        assertTrue(TM_addition.Run("0#01#01", false));
+        assertTrue(TM_addition.Run("#01#01", false));
     }
-     */
+
     @Test
-    void secondonly() {
-        assertTrue(TM_addition.Run("0#01#01", false));
+    void secondonlywithzero() {
+        assertTrue(TM_addition.Run("0#11#11", false));
     }
     @Test
     void simplecarry() {
@@ -134,5 +137,9 @@ class AdditionTests {
     @Test
     void complicatedcarry() {
         assertTrue(TM_addition.Run("101#111#0011", false));
+    }
+    @Test
+    void non_alphabet() {
+        assertFalse(TM_addition.Run("1021#111#0011", false));
     }
 }

@@ -18,6 +18,6 @@ public class Main {
         System.out.println(TM.Run("1#1#01",false));
         System.out.println(TM.Run("1#01#11",false));
         System.out.println(TM.Run("00#111#111",false));
-        System.out.println(TM.Run("11#11#011",false));
+        System.out.println(TM.Run("#01#01",true));
     }
 }
