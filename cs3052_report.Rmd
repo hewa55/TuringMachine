@@ -311,6 +311,10 @@ cubic more relevant for addition analysis --> bigger numbers, bigger discrepacy 
 http://turingmachine.io/
 http://www.logique.jussieu.fr/~michel/ha.html
 
+The Busy Beaver is a Turing Machine of a specified input size, which takes as many transitions as possible without entering an infinite loop. As this varys depending on number of states adn the size of the input alphabet, there is one TM for each combination of the above. Known to increase very rapidely, there are four Turing Machines implemented in this analysis. They all have two states, but the size of the alphabet increases from two up to and including five. Another crucial difference to the other problems above is that the busy beaver TM's always start with an empty tape. 
+
+The TM's are all slightly different in their transitions, but have the common characteristic of two states.
+
 ```{r,echo=FALSE, out.width="80%"}
 # All defaults
 knitr::include_graphics("pictures/new_beavers.png")
@@ -319,6 +323,42 @@ knitr::include_graphics("pictures/new_beavers.png")
 ### Theoretical complexity analysis
 
 ### Experimental complexity analysis
+
+The theoretical analysis given above can be found one to one in the results of the experiments.
+This is a table of the results:
+```{r,echo=FALSE}
+beavers = read.csv("src/beaver_test.csv")
+
+# All defaults
+knitr::kable(beavers[][1:2])
+```
+
+The numbers are exactly as expected from the theoretical anlysis. Setting these numbers in perspective to each other gives an impressive plot:
+
+```{r,echo=FALSE}
+par(mfrow=c(1,2))
+plot_beavers <- function(main){
+    plot(beavers$problem_size,
+     beavers$transitions,
+     xlab="Problem size n",
+     ylab = "number of transitions",main=main)
+}
+plot_beavers_small <- function(main){
+    plot(beavers[1:2,]$problem_size,
+     beavers[1:2,]$transitions,
+     xlab="Problem size n",
+     ylab = "number of transitions",main=main)
+}
+plot_beavers_small("Plot for 2 and 3 - symbols")
+plot_beavers("Plot of 2,3 and 4 - symbols")
+par(mfrow=c(1,1))
+```
+
+The growth of the number of transitions is difficult to grasp by just looking at the increase of the symbol count from 2 to 3, but setting it into perspective with the transitions needed for input size 4, gives of a completely different picture. Please note the right and the left diagrams above. 
+
+Interestingly, taking the time of the TM with 4 symbols took x seconds. Assuming each transition takes the same amount of time, we can now calculate how much time it would take to theoretically calculate the time for the TM with 5 symbols. This now explains why the theoretical analysis is only a theory but not available in practice. The factor in terms of transitions is roughly t, multiplying the time with the same factor gives t2. This would be until t3.
+
+For an exponential growth this function would need to have the same factors between each increase in step size, which is not the case! This means that the observed busy beaver functions grow faster than an exponential function. The function is also known to be uncomputational.
 
 ## Summary
 
