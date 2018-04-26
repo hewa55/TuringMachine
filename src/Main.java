@@ -1,7 +1,7 @@
-import java.util.BitSet;
+import java.math.BigInteger;
 
 public class Main {
-    static BitSet bs = new BitSet(3);
+
     public static void main(String[] args) {
 
         String TM_description = args[0];
@@ -9,30 +9,19 @@ public class Main {
         TuringMachineFactory TMF = new TuringMachineFactory();
         TuringMachine TM = TMF.BuildTuringMachine(TM_description);
 
-        //System.out.println(TM.Run(new TimeTaker().PalindromeInputCreator(3),true));
-
-        //BitSet bitSet = new BitSet(5);
-        //bitSet.set(0,4);
-        //System.out.println(bitSet.cardinality());
-        //bitSet.flip(2);
-        //System.out.println(bitSet.toString());
-        //fill(0,3);
+        //TM.Run("_",true);
 
         TimeTaker timeTaker = new TimeTaker();
-        timeTaker.TuringTimer(1, 1000, "palindrome.txt", "name");
+        timeTaker.BeaverTuringTimer("beaver_test.csv");
+        timeTaker.TuringTimer(1, 250, "divide.txt", "divisibility_test.csv");
+        // palindrome file
+        timeTaker.TuringTimer(1, 250, "palindrome.txt", "palindrome_test.csv");
+
+        // addition file
+        timeTaker.TuringTimer(1, 250, "addition.txt", "addition_test.csv");
 
     }
 
-    static void fill(int k, int n) {
-        if (k == n) {
-            System.out.println(bs);
-            return;
-        }
-        bs.set(k, false);
-        fill(k + 1, n);
-        bs.set(k, true);
-        fill(k + 1, n);
-    }
 
     private static String reverseBinaryString(String binary) {
         char[] content = binary.toCharArray();
@@ -43,6 +32,18 @@ public class Main {
             content[j] = temp;
         }
         return new String(content);
+    }
+
+    private static String divideInputCreator(int size) {
+        BigInteger big = new BigInteger("1");
+        BigInteger three = new BigInteger("3");
+        do {
+            big = big.multiply(three);
+            System.out.println(big.bitLength());
+            System.out.println(big);
+            System.out.println("---------------");
+        } while (reverseBinaryString(big.toString(2)).length() < size);
+        return reverseBinaryString(big.toString(2));
     }
 
 

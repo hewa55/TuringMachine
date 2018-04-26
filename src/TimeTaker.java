@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Random;
 
 public class TimeTaker {
@@ -6,11 +9,75 @@ public class TimeTaker {
         TuringMachine TM = TMF.BuildTuringMachine(TM_description);
 
         Random rand = new Random(1234);
-        for (int i = startSize; i < endSize; i++) {
-            String input = inputCreator(TM_description, i, rand);
-            System.out.println(TM.Run(input, false));
+        try {
+            FileWriter writer;
+            writer = new FileWriter(file_name);
+
+            writer.append("problem_size");
+            writer.append(",");
+            writer.append("transitions");
+            writer.append(",");
+            writer.append("input");
+            writer.append('\n');
+
+            for (int i = startSize; i < endSize; i++) {
+                if (i % 10 == 0) {
+                    System.out.println(i);
+                }
+                String input = inputCreator(TM_description, i, rand);
+                int transitions = TM.Run(input, false);
+
+                writer.append(Integer.toString(i));
+                writer.append(",");
+                writer.append(Integer.toString(transitions));
+                writer.append(",");
+                writer.append(":" + input);
+                writer.append('\n');
+            }
+            writer.flush();
+            writer.close();
+
+        } catch (IOException e) {
+            System.out.println(e.getCause());
         }
     }
+
+    public void BeaverTuringTimer(String file_name) {
+        try {
+
+            FileWriter writer;
+            writer = new FileWriter(file_name);
+
+            writer.append("problem_size");
+            writer.append(",");
+            writer.append("transitions");
+            writer.append(",");
+            writer.append("input");
+            writer.append('\n');
+
+            TuringMachineFactory TMF = new TuringMachineFactory();
+            for (int i = 2; i < 5; i++) {
+                System.out.println(i);
+                TuringMachine TM = TMF.BuildTuringMachine("busy_beaver_" + i + ".txt");
+                long start = System.nanoTime();
+                int transitions = TM.Run("_", false);
+                System.out.println(System.nanoTime() - start);
+                writer.append(Integer.toString(i));
+                writer.append(",");
+                writer.append(Integer.toString(transitions));
+                writer.append(",");
+                writer.append(":" + "_");
+                writer.append('\n');
+            }
+            writer.flush();
+            writer.close();
+
+
+        } catch (IOException e) {
+            System.out.println("exception");
+        }
+    }
+
 
     private String inputCreator(String TM_description, int size, Random rand) {
         String input = "";
@@ -21,34 +88,40 @@ public class TimeTaker {
             case "palindrome.txt":
                 input = PalindromeInputCreator(size, rand);
                 break;
+            case "divide.txt":
+                input = divideInputCreator(size);
+                break;
         }
 
         return input;
     }
 
     public String AdditionInputCreator(int size, Random rand) {
-        String input = "";
-        if (size > 31) {
-            System.out.println("too large");
-            return "please stay below 32";
+        String s1 = "";
+        String s2 = "";
+        if (size < 1) {
+            return "##";
         }
-        int lower = (int) Math.pow(2.0, size - 1);
-        int upper = (int) Math.pow(2.0, size) - 1;
+        for (int i = 0; i < size; i++) {
+            int temp1 = rand.nextInt(2);
+            int temp2 = rand.nextInt(2);
+            s1 = s1 + temp1;
+            s2 = s2 + temp2;
+        }
+        BigInteger first = new BigInteger(s1, 2);
+        BigInteger second = new BigInteger(s2, 2);
 
-        int first;
-        int second;
+        BigInteger result = first.add(second);
+        //if first and second are padded with zeros at the end
+        if (result.toString(2).length() < s1.length()) {
+            s1 = "1" + s1.substring(1, s1.length());
+            first = new BigInteger(s1, 2);
+            result = first.add(second);
+        }
+        String binaryStringResult = result.toString(2);
 
-        first = rand.nextInt((upper - lower) + 1) + lower;
-        second = rand.nextInt((upper - lower) + 1) + lower;
-
-        String binaryString1 = Integer.toBinaryString(first);
-        String reverseBinaryString1 = reverseBinaryString(binaryString1);
-
-        String binaryString2 = Integer.toBinaryString(second);
-        String reverseBinaryString2 = reverseBinaryString(binaryString2);
-
-        int result = first + second;
-        String binaryStringResult = Integer.toBinaryString(result);
+        String reverseBinaryString1 = reverseBinaryString(s1);
+        String reverseBinaryString2 = reverseBinaryString(s2);
         String reverseBinaryStringResult = reverseBinaryString(binaryStringResult);
 
         return reverseBinaryString1 + "#" + reverseBinaryString2 + "#" + reverseBinaryStringResult;
@@ -61,6 +134,18 @@ public class TimeTaker {
             input = num + input + num;
         }
         return input;
+    }
+
+    private String divideInputCreator(int size) {
+        BigInteger big = new BigInteger("1");
+        BigInteger three = new BigInteger("3");
+        do {
+            big = big.multiply(three);
+            System.out.println(big.bitLength());
+            System.out.println(big);
+            System.out.println("---------------");
+        } while (reverseBinaryString(big.toString(2)).length() < size);
+        return reverseBinaryString(big.toString(2));
     }
 
     private String reverseBinaryString(String binary) {

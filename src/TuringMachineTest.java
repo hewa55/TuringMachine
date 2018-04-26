@@ -40,7 +40,6 @@ class PalindromeTest {
     @Test
     void spec_example3_fail() {
         assertEquals(TM_palindrome.Run("20110", false), -1);
-
     }
 
     // --- additional test cases ---
@@ -78,66 +77,122 @@ class AdditionTests {
     void TuringMachine() {
         TM_addition = new TuringMachineFactory().BuildTuringMachine("addition.txt");
     }
+
     // ----- given in specs
     @Test
     void spec_example1() {
         assertTrue(TM_addition.Run("0#0#0", false) > 0);
     }
+
     @Test
     void spec_example2() {
         assertTrue(TM_addition.Run("01#1#11", false) > 0);
     }
+
     @Test
     void spec_example3() {
         assertTrue(TM_addition.Run("00#111#111", false) > 0);
     }
+
     @Test
     void spec_example1_false() {
         assertEquals(TM_addition.Run("0#0", false), -1);
     }
+
     @Test
     void spec_example2_false() {
         assertEquals(TM_addition.Run("0#0#1", false), -1);
     }
+
     @Test
     void spec_example3_false() {
         assertEquals(TM_addition.Run("000#111#11", false), -1);
     }
+
     // ----- extra tests
     @Test
     void empty() {
         assertTrue(TM_addition.Run("##", false) > 0);
     }
+
     @Test
     void firstonly() {
         assertTrue(TM_addition.Run("01##01", false) > 0);
     }
+
     @Test
     void firstonlywithzero() {
         assertTrue(TM_addition.Run("01#0#01", false) > 0);
     }
+
     @Test
     void secondonly() {
         assertTrue(TM_addition.Run("#01#01", false) > 0);
     }
+
     @Test
     void secondonlywithzero() {
         assertTrue(TM_addition.Run("0#11#11", false) > 0);
     }
+
     @Test
     void simplecarry() {
         assertTrue(TM_addition.Run("1#1#01", false) > 0);
     }
+
     @Test
     void doublecarry() {
         assertTrue(TM_addition.Run("11#11#011", false) > 0);
     }
+
     @Test
     void complicatedcarry() {
-        assertTrue(TM_addition.Run("101#111#0011", false) > 0);
+        assertTrue(TM_addition.Run("101#111#0011", true) > 0);
     }
+
     @Test
     void non_alphabet() {
         assertFalse(TM_addition.Run("1021#111#0011", false) > 0);
     }
+
+    @Test
+    void result_shorter() {
+        assertFalse(TM_addition.Run("0110#0000#011", false) > 0);
+    }
+}
+
+class DivisionTests {
+    private TuringMachine TM_divide;
+
+    @BeforeEach
+    void TuringMachine() {
+        TM_divide = new TuringMachineFactory().BuildTuringMachine("divisibilty.txt");
+    }
+
+    //
+    @Test
+    void spec_exambusple1() {
+        assertTrue(TM_divide.Run("1001", false) > 0);
+    }
+
+    @Test
+    void spec_example2() {
+        assertTrue(TM_divide.Run("11", false) > 0);
+    }
+
+    @Test
+    void spec_example3() {
+        assertTrue(TM_divide.Run("100111", false) > 0);
+    }
+
+    @Test
+    void spec_example4() {
+        assertTrue(TM_divide.Run("00101", false) == -1);
+    }
+
+    @Test
+    void spec_example5() {
+        assertTrue(TM_divide.Run("00102", false) == -1);
+    }
+
 }

@@ -1,0 +1,15 @@
+states 3
+s0
+s1
+s2 +
+alphabet 4 _ 1 2 3 4
+s0 _ s1 1 R
+s0 2 s1 2 L
+s0 1 s0 2 L
+s0 2 s0 1 R
+s0 4 s0 1 L
+s1 _ s1 1 L
+s1 1 s1 2 R
+s1 2 s1 3 R
+s1 2 s0 4 R
+s1 4 s2 1 R
