@@ -303,13 +303,9 @@ plot_divide("Plot of the transitions")
 
 Given the straight line and the theoretical anlysis, there is no further investigation worth the time and it can be concluded that the problem divisibilty by three has a linear complexity checking time.
 
-## Comparison of the Problems
-
-cubic more relevant for addition analysis --> bigger numbers, bigger discrepacy between theoretical (sacking the numbers/ constants) and the actual representation.
 
 ## Busy beaver
-http://turingmachine.io/
-http://www.logique.jussieu.fr/~michel/ha.html
+
 
 The Busy Beaver is a Turing Machine of a specified input size, which takes as many transitions as possible without entering an infinite loop. As this varys depending on number of states adn the size of the input alphabet, there is one TM for each combination of the above. Known to increase very rapidely, there are four Turing Machines implemented in this analysis. They all have two states, but the size of the alphabet increases from two up to and including five. Another crucial difference to the other problems above is that the busy beaver TM's always start with an empty tape. 
 
@@ -320,12 +316,41 @@ The TM's are all slightly different in their transitions, but have the common ch
 knitr::include_graphics("pictures/new_beavers.png")
 ```
 
+The design of the different machines were taken from other resources, in particular:
+
+1. The 2 state 2 symbol machine was designed by Rado [1]
+2. The 3 symbol machine was taken from Lafitte [2]
+3. The 4 symbol machine was taken from Ligocki [3]
+4. The 5 symbol machine was taken from Ligocki [3]
+
+From now on the different TM will be referred to as (state,size of input alphabet)BB, where BB stands for busy beaver. The 2 state 2 symbol TM is a (2,2)BB, as an example.
+
 ### Theoretical complexity analysis
+
+The theoretical analysis of the Turing Machines themselves on their own is beyond the scope of this submission, however, there are a few things worth highlighting.
+Firstly, it is fairly easy to grasp the basic concept of the inital (2,2)BB. The TM builds up a row of three ones before finishing. The empty tape develops in the follwing way, where x denotes the empty _:
+
+Case | Tape | State
+-----|----- | -----
+1| xx**x**xx| 0
+2| xx1**x**x| 1
+3| xx**1**1x| 0
+4| x**x**11x| 1
+5| x1**1**1x| 0
+6| x**1**11x| 1
+7| x1**1**1x| 2 - Halted
+
+The main idea of this TM is to create a string on the tape through which it then has to iterate again. There are 7 cases denoted in the table above, which let us conclude that there will be 6 transitions required to write the 111 string on the tape. According to research, this is as many transitions as possible for a TM with these specifications.
+The idea seems simple for a (2,2)BB, but as soon as the input alphabet is increased by one sign and there is a (2,3)BB the situation becomes more complicated.
+Lafitte published in his 2007 paper, that the maximum amount of transitions are 38 and one will end up with an input string of length 9 on the tape. This is a steep increase for an additional input letter. The idea underlying the (2,3)BB is that the input string of a certain length is written and then the ones and twos will be replaced with each other while iterating throught the string. 
+The same idea applies for the next increase in complexity. The (2,4)BB has already $3932964$ transitions and then the (2,5)BB has $1.9 * 10^{704}$ transitions as published by Ligocki[3]. The count of transitions for the (2,5)BB is so large that the number exceeds the atoms in the observable universe by a factor of more than $10^{600}$ [4]. A number too big to even grasp.
+According to Ligocki a (2,6)BB reaches more than $2.4 * 10^{9866}$ transitions. Both numbers will be put into perspective in the next section.
 
 ### Experimental complexity analysis
 
 The theoretical analysis given above can be found one to one in the results of the experiments.
 This is a table of the results:
+
 ```{r,echo=FALSE}
 beavers = read.csv("src/beaver_test.csv")
 
@@ -356,11 +381,33 @@ par(mfrow=c(1,1))
 
 The growth of the number of transitions is difficult to grasp by just looking at the increase of the symbol count from 2 to 3, but setting it into perspective with the transitions needed for input size 4, gives of a completely different picture. Please note the right and the left diagrams above. 
 
-Interestingly, taking the time of the TM with 4 symbols took x seconds. Assuming each transition takes the same amount of time, we can now calculate how much time it would take to theoretically calculate the time for the TM with 5 symbols. This now explains why the theoretical analysis is only a theory but not available in practice. The factor in terms of transitions is roughly t, multiplying the time with the same factor gives t2. This would be until t3.
+Interestingly, taking the time of the TM with 4 symbols took 2463571311 nanoseconds which are 0.04 minutes. Assuming each transition takes the same amount of time, we can now calculate how much time it would take to theoretically calculate the time for the TM with 5 symbols. This now explains why the theoretical analysis is only a theory but not available in practice. The factor the transitions increase by is roughly $10^798$. However, onlt taking $10^7$ as a factor would lead to a computation almost taking a year. Computing the (2,5)BB would take hundreds of years on the lab machines and even a faster machine would not improve the computational execution to a bearable level.
 
-For an exponential growth this function would need to have the same factors between each increase in step size, which is not the case! This means that the observed busy beaver functions grow faster than an exponential function. The function is also known to be uncomputational.
+For an exponential growth this function would need to have the same factors between each increase in step size, which is not the case! This means that the observed busy beaver functions grow faster than an exponential function. Putting the oberserved data into perspective with the maximum value R can compute, which is still much smaller than the theoretical values for (2,5)BB, let alone (2,6)BB, gives the following graphs: 
+
+```{r,echo=FALSE, warning=FALSE}
+beavers[nrow(beavers) + 1,] = c(5,2147483647,"_")
+
+plot_beaver_big <- function(main,max_row){
+    plot(beavers[1:max_row,]$problem_size,
+     beavers[1:max_row,]$transitions,
+     xlab="Problem size n",
+     ylab = "number of transitions",main=main)
+}
+plot_beaver_big("Putting the observations into perspective",5)
+```
+
+This makes the busy beaver TMs interesting and unique. The complexity is so rapidely increasing that a (2,8)BB has yet to be found. The busy beaver function is also regarded as uncomputable for the reasons above.
+
+## Comparison of the Problems
+
+Before turning to the summary of this chapter, there are a few interesting facts to highlight.
+Notably that the difference in transition count for the Palindrome problem and the Addition is quite noticable even though both are bounded by $O(n^2)$. This is down to the factors involved when conducting the experiements and the factors dropped when defining input size. Especially dropping the factor multiplication factor from the definition for the length of the input string of the addition problem causes a strong level of skewness in when comparing the results. To compare the problems the problem size needs ot be defined more stringent.
 
 ## Summary
+
+The four problems present are four very different algorithms with different complexities presenting the power and variablilty of Turing Machines. The given problems in the specifications display how the complexity of seemingly easy tasks become more difficult when just one tape is available and the problem size increases. On the first look checking an addition for a correct solution seems a lot more difficult than a palindrome check, but as seen above both are bounded by the same $O(.)$. Finally, the divisibilty check shows how even simple TMs can produce helpful tasks and the busy beavers provide an excourse into the threoretical field of general computational bounds.
+
 
 # Non deterministic TM
 
@@ -373,3 +420,12 @@ For an exponential growth this function would need to have the same factors betw
 ### Experimental Analysis
 
 
+# Bibiliography
+[1] Rado T. (1963) On a simple source for non-computable functions in: Proceedings of the Symposium on Mathematical Theory of Automata, April 1962, Polytechnic Institute of Brooklyn, April 1963, 75-81.  
+[2] Lafitte G. and Papazian C. (2007) The fabric of small Turing machines
+in: Computation and Logic in the Real World, Proceedings of the Third Conference on Computability in Europe, June 2007, 219-227.   
+[3] Michel P. (2017) The Busy Beaver Competition: a historical survey   
+[4] Universe today, How many atoms are there in the universe? (2009) https://www.universetoday.com/36302/atoms-in-the-universe/  
+
+http://turingmachine.io/
+http://www.logique.jussieu.fr/~michel/ha.html

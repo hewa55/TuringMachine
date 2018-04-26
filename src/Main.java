@@ -13,12 +13,12 @@ public class Main {
 
         TimeTaker timeTaker = new TimeTaker();
         timeTaker.BeaverTuringTimer("beaver_test.csv");
-        timeTaker.TuringTimer(1, 250, "divide.txt", "divisibility_test.csv");
+        //timeTaker.TuringTimer(1, 250, "divide.txt", "divisibility_test.csv");
         // palindrome file
-        timeTaker.TuringTimer(1, 250, "palindrome.txt", "palindrome_test.csv");
+        //timeTaker.TuringTimer(1, 250, "palindrome.txt", "palindrome_test.csv");
 
         // addition file
-        timeTaker.TuringTimer(1, 250, "addition.txt", "addition_test.csv");
+        //timeTaker.TuringTimer(1, 250, "addition.txt", "addition_test.csv");
 
     }
 
