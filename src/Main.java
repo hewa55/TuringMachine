@@ -8,11 +8,14 @@ public class Main {
         String input_file = args[1];
         TuringMachineFactory TMF = new TuringMachineFactory();
         TuringMachine TM = TMF.BuildTuringMachine(TM_description);
-
+        NTM ntm = new NTM(TM.getStates(), TM.getTransitionTable(), TM.getStartState(), TM.getAcceptingStates());
+        System.out.println(ntm.getStates());
+        System.out.println(ntm.getTransitionTable());
         //TM.Run("_",true);
-
-        TimeTaker timeTaker = new TimeTaker();
-        timeTaker.BeaverTuringTimer("beaver_test.csv");
+        System.out.println(ntm.Run(true, "001", ntm.getStartState(), 0));
+        // for later
+        //TimeTaker timeTaker = new TimeTaker();
+        //timeTaker.BeaverTuringTimer("beaver_test.csv");
         //timeTaker.TuringTimer(1, 250, "divide.txt", "divisibility_test.csv");
         // palindrome file
         //timeTaker.TuringTimer(1, 250, "palindrome.txt", "palindrome_test.csv");

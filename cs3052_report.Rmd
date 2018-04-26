@@ -47,7 +47,7 @@ In the subsequent sections 4 problems will be analysed. For each of the problems
 
 A palindrome is an input string which is equivalent to its reversed version. Hence madam is a palindrome, but Adam is not. For this analysis the alphabet is restrived to {0,1,2}. 
 The solution has been visualised below in a graph:
-```{r,echo=FALSE,out.width = "80%"}
+```{r,echo=FALSE,out.width = "80%",fig.align="center"}
 library(png)
 # All defaults
 knitr::include_graphics("pictures/pdrome.png")
@@ -72,6 +72,7 @@ The input size is defined to be the amount of symbol pairs. This has been done t
 
 The validity of this implementation has been tested with a java unittest suite. Beyond the examples given in the specification, this test suite includes more sophisticated corner cases, including uneven Palindromes which consists of the same input symbol.
 Further, this example has been tested by automatically generated inputs. The automatic generation of a palindrome appends one of {0,1,2} to the beginning and end of the input string. For various seeds, this implementation has proved to detect correct and incorrect palindromes accurately.
+This implementation could have been improved if there was a two way check implemented. This means that "on the way back" from one end the Turing machine checks again, instead of traversing the whole string before picking up new information about the outermost character.
 
 ### Theoretical complexity analysis
 
@@ -87,7 +88,7 @@ From this, we can conclude the inquality $N \leq n^2$ is true and that the palin
 
 As defined above, input size of 1, will actually be a string of length 2. E.g. the string "22"" is input size one, as it requires one loop in the algorithm. The sampled data is displayed below:
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,fig.align="center"}
 palindrome = read.csv("out/production/CS3052_P2/palindrome_test.csv")
 
 plot_palindrome <- function(main){
@@ -108,7 +109,7 @@ To analyse the data, we can fit different models. Assuming that there will be li
 
 Exponential functions are discarded as there is no exponential growth term. 
 
-```{r fitting, comment=""}
+```{r fitting, comment="",fig.align="center"}
 # linear model degree 1
 fit.one = lm(palindrome$transitions ~ poly(palindrome$problem_size,1))
 # linear model degree 2
@@ -148,7 +149,7 @@ The conclusion of this analysis is that the experimental analysis of the palindr
 This TM tests for inputs of the form x#y#z, where x,y,z are binary numbers with the least significant bit first. The TM accepts the input if x+y=z. This particular implementation also accepts if either x or y are left out, e.g. x##z is a valid input, given x=z. 
 When implementing this description, care had to be taken when dealing with carries. Drawing the diagram yields a complicated structure, which is difficult to grasp.
 
-```{r,echo=FALSE,out.width = "80%"}
+```{r,echo=FALSE,out.width = "80%",fig.align="center"}
 
 # All defaults
 knitr::include_graphics("pictures/addition.png")
@@ -186,7 +187,7 @@ Similarly to the inital problem we obtain a theoretical complexity, which is upp
 
 As defined above, input size of 1, will actually be a string of length $3*n+2 = = 3 * 1 + 2 = 5$. E.g. the string "1#0#1" is input size one, as it is one loop in the algorithm. This is a difference which is not relevant in the theoretical analysis becomes relevant in pratice when predicting the accurate count of transitions. The sampled data is displayed below:
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,fig.align="center"}
 addition = read.csv("out/production/CS3052_P2/addition_test.csv")
 
 plot_addition <- function(main){
@@ -200,7 +201,7 @@ plot_addition("Plot of the transitions")
 
 As the plot looks similar in shape the one observed before when investigating the complexity of the palindrome algorithm, the seems to be no nessecity to investigate the linear model any further.
 
-```{r fitting_addition, comment=""}
+```{r fitting_addition, comment="",fig.align="center"}
 # linear model degree 2
 fit.two = lm(transitions ~ poly(problem_size,2),data=addition)
 # linear model degree 3
@@ -249,7 +250,7 @@ Clearly the cubic offers a better fit. However, considering the extra complexity
 This TM tests for inputs of the form x, where x is a binary number with the least significant bit first. The TM accepts the given string if the string is divisible by 3 and rejects if the string is not divisible by 3.
 A transition graph is drawn below:
 
-```{r,echo=FALSE,out.width = "80%"}
+```{r,echo=FALSE,out.width = "80%",fig.align="center"}
 
 # All defaults
 knitr::include_graphics("pictures/divide.png")
@@ -289,7 +290,7 @@ In case a, the string is accepted, in case b, the string is rejected. Hence the 
 As seen in the theoretical analysis, division by three has a function, which is linear in theory without dropping constants. 
 This straight line is also retrieved when experimenting with divisibilty by 3 in pratice. The plot below plots transitiions agains input sizes.
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,fig.align="center"}
 divide = read.csv("src/divisibility_test.csv")
 
 plot_divide <- function(main){
@@ -311,7 +312,7 @@ The Busy Beaver is a Turing Machine of a specified input size, which takes as ma
 
 The TM's are all slightly different in their transitions, but have the common characteristic of two states.
 
-```{r,echo=FALSE, out.width="80%"}
+```{r,echo=FALSE, out.width="80%",fig.align="center"}
 # All defaults
 knitr::include_graphics("pictures/new_beavers.png")
 ```
@@ -351,7 +352,7 @@ According to Ligocki a (2,6)BB reaches more than $2.4 * 10^{9866}$ transitions. 
 The theoretical analysis given above can be found one to one in the results of the experiments.
 This is a table of the results:
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,fig.align="center"}
 beavers = read.csv("src/beaver_test.csv")
 
 # All defaults
@@ -360,7 +361,7 @@ knitr::kable(beavers[][1:2])
 
 The numbers are exactly as expected from the theoretical anlysis. Setting these numbers in perspective to each other gives an impressive plot:
 
-```{r,echo=FALSE}
+```{r,echo=FALSE,fig.align="center"}
 par(mfrow=c(1,2))
 plot_beavers <- function(main){
     plot(beavers$problem_size,
@@ -385,7 +386,7 @@ Interestingly, taking the time of the TM with 4 symbols took 2463571311 nanoseco
 
 For an exponential growth this function would need to have the same factors between each increase in step size, which is not the case! This means that the observed busy beaver functions grow faster than an exponential function. Putting the oberserved data into perspective with the maximum value R can compute, which is still much smaller than the theoretical values for (2,5)BB, let alone (2,6)BB, gives the following graphs: 
 
-```{r,echo=FALSE, warning=FALSE}
+```{r,echo=FALSE, warning=FALSE,fig.align="center"}
 beavers[nrow(beavers) + 1,] = c(5,2147483647,"_")
 
 plot_beaver_big <- function(main,max_row){
@@ -411,13 +412,51 @@ The four problems present are four very different algorithms with different comp
 
 # Non deterministic TM
 
+Another interesting thought is to simulate a non-deterministic Turing Machine NTM with a deterministic Turing Machine. One of the most striking differences and most defining factor of a NTM is the "guessing" ability of the NTM. The NTM can be in multiple states at the same time and will accept the input when one of the different routes will lead to an accepting state. In an idealised world all of these different paths would be executed in parrallel, allowing exponential algorithms to be run in polynomial time, which would be a breakthrough for many computational intensive processes. 
+
+There are multiple ways to enocde this into a non deterministic machine:
+
+1. Multiple configuration states: Creating a list of states the Turing Machine is in.
+2. A three tape approach in which each tape serves its purpose in computing the input string and saving the state.
+
+For the purpose of this submission, a forked version of the first of the two approaches has been implemented. Recursively the implementation will call a "run" initiator on itself and will run the next steps for every single possible transition given the current state. Running time for simulators like this might be higher, but the count of transitions will be lower, which is the important note on this problem.
+
 ## Design
 
+The design is very similar to the design of the TM in the first tasks, however, this time the function to execute the next steps is called recursively on the same object. This allows the progress to bounce back and procees from the latest valid state to try to the next possible transition in this state.
+The design also uses HashSets to keep all states and transitions in order.
+
 ## Problem 1
+
+The problem to regognize a string with an unlimited amount of 0's and 1's before the string ends in 01 has been chose. This problem already occured in lectures and allows to demonstrate the advantage of a NTM over a TM. Note that this could also be encoded in an NFA. 
+
+The NTM has the following transition graph:
+
+```{r,echo=FALSE, out.height="80%",fig.align="center"}
+# All defaults
+knitr::include_graphics("pictures/NTM.png")
+```
+
+Further it has the following formal definition NTM = (Q,$\Sigma$,I,q,$\delta$,F):
+
+Q = {s0,s1,s2}  
+$\Sigma$ = {I,_}  
+I = {0,1}  
+q = {s0}  
+$\delta$ = as defined in the diagram  
+F = {s2} 
+
+Please note that what makes this problem non deterministic is the fact that in s0 for the input 0, the machine can either stay in s0 or change into s1. 
 
 ### Theoretical Analysis
 
 ### Experimental Analysis
+
+Computing this non - deterministic problem can in fact yield multiple paths. The best way to display the path is a tree. Given the string ... we can compute the following graph with the different endpoints. The same tree structure can be found below in the output of the program for the exact same string.
+
+# Conclusion
+
+This report has shown how versatile Turing Machines are. In particular the set of problems which can be encoded into a one tape Turing Machine problem and the different performances of those algorithms. The limits of these complexities are set by the busy beaver functions growing faster than any other computable function. Ultimately, non-deterministic Turing Machines do not extend the field of computable problems, but offer a theoretical shortcut to many problems.
 
 
 # Bibiliography

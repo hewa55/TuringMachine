@@ -1,12 +1,11 @@
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 public class TuringMachine {
-    private Set<String> States;
-    private Set<Transition> TransitionTable;
+    private HashSet<String> States;
+    private HashSet<Transition> TransitionTable;
     private String StartState;
-    private Set<String> acceptingStates;
+    private HashSet<String> acceptingStates;
 
     private String Tape;
     private String CurrentState;
@@ -109,12 +108,21 @@ public class TuringMachine {
         this.CurrentSymbol = 0;
 
     }
-    public Set<String> getStates() {
+
+    public HashSet<String> getStates() {
         return States;
     }
 
-    public Set<Transition> getTransitionTable() {
+    public HashSet<Transition> getTransitionTable() {
         return TransitionTable;
+    }
+
+    public HashSet<String> getAcceptingStates() {
+        return acceptingStates;
+    }
+
+    public String getStartState() {
+        return StartState;
     }
 
     public void printTM(){
