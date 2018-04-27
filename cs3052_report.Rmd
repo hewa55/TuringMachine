@@ -1,52 +1,71 @@
 ---
 title: "CS3052"
 author: '150001088'
-date: "25 April 2018"
-output: pdf_document
+date: "27 April 2018"
+output: 
+  pdf_document:
+    toc: true
 ---
-
+\pagenumbering{gobble} 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+\newpage
+\pagenumbering{arabic} 
 
 # Overview
 
-This practical offers an example of a Java programmed Turing Machine (TM) and encodes four different TM problems into a human readable and machine readable format. A theoretical and experimental analysis of complexity executed on the problem of Palindrome regognition, Binary addition, BLANK and BLANK.
+This practical offers an example of a Java programmed Turing Machine (TM) and encodes four different TM problems into a human readable and machine readable format. A theoretical and experimental analysis of complexity is executed on the problem of Palindrome recognition, Binary addition, Divisibility by three and 2 state busy beavers. 
+In the last chapter a non deterministic Turing Machine simulator is implemented.
 
 ## Reproducability
 
-All my experiments are reproducible with the Code submitted. All relevant data files are created when the main method is run. BLANK [ content about running the machine ]
-This report has been created with R markdown and the plots in this project have been made with different R libraries. 
+All my experiments are reproducible with the Code submitted. All relevant data files are created when the main method is run. The main method can be run from the command using standard command line options. Further, the code fulfills the requirement such that *java Main input_file input_string type* will test the input string against the given encoded requirements in the input file. *type* can be "NTM" for a non deterministic TM, "Test" generates the data files for the problems below and any other input will run a deterministic TM. However, *type* should be given in any way otherwise the program will fail. 
+This report has been created with R markdown and the plots in this project have been made with different R libraries. Relevant R code chunks are included in this report.
 
 # Design
 
-This section highlights the design decisions made to encode a Turing Machine in Java and then how the experiemts are conducted.
+This report has been planned with a reader in mind to give an introduction in different Turing Machine problems and their theoretical and experimental analysis. 
+The Java code to conduct the experiments is split up into a easily and digestive format and should not be the worry in the process to understand the implications of this report. 
+The experiments were designed to cover growth sizes in the algorithm to be able to derive a general feeling for the growth factor, but still small enough to easily reproduce the dataset without a bigger time investment.
+For every problem a file with the machine readable description of the program is included in this submission. The failes carry the name of the test they will be included in. 
+
+A test class has been provided with the name "Test_TuringMachineTest.java" and uses Junit Jupiter annotations.
 
 ## Implementation
 
 This implementation in Java offers an object oriented approach to Turing Machine encoding. A TM is considered an object and created by a Turing Machine Factory, which takes a TM description in a format specified by the practical specifications.
-This factory builds a Turing Machine by reading the input file and adding states and trasitions to a Turing Machine object. A transition is a new transition object, which contains the read state, read symbol, write state and write symbol as well as the move direction.  
+This factory builds a Turing Machine by reading the input file and adding states and transitions to a Turing Machine object. A transition is a new transition object, which contains the read state, read symbol, write state and write symbol as well as the move direction.  
 The TM object itself has multiple fields including HashSet's for all states, the accepting states and the transition objects. Further, the start state is specified and three different fields maintain information while running: the tape, the current state and the current symbol. 
-The TM object can then be used to run a ckeck on an input string. A verbose option is included by setting steps to **true**. Upon success the run function returns an integer value greater or equal to zero, indicating the count of transitions. If the input string is rejected, -1 is returned.
+The TM object can then be used to run a check on an input string. A verbose option is included by setting steps to **true**. Upon success the run function returns an integer value greater or equal to zero, indicating the count of transitions. If the input string is rejected, -1 is returned.
 
-Note that this implementation does *not* check if the states of an added transition were specified before. This has been discussed with the marker before submission.
+Note that this implementation does *not* check if the states of an added transition nor symbols were specified before in the states or the alphabet. This has been discussed with the lecturer before submission and was left to the implementation.
 
 ## Complexity Testing
 
-To allow easy testing a wrapper class has been written around the Turing Machine and the Turing Machine Factory. The TimeTaker class has a function TuringTimer, which takes the start input size and end input size of the problem, the name of a text file containting the description of the turing machine and the output file name for the results.
-The name TuringTimer can be considered slightly missleading as transitions are counted instead of time, but these transitions can be considered as another type of time measurement as it counts the operations needed to compute the problem and as time is machine specific, counting transitions offers a more generalised description of the problem complexity. 
-Internally the TuringTimer function creates a TM object as descriped in the previous chapter and increases the problem size step by step. Problem size should not be confused with the input lenght as they can differ depending on how the problem size is defined. Taking binary addition as an example a problem size of 1 refers to a problem in which the integers added have size one, e.g. "0#0#0". We see that the string has size 5.
+To allow easy testing a wrapper class has been written around the Turing Machine and the Turing Machine Factory. The TimeTaker class has a function TuringTimer, which takes the start input size and end input size of the problem, the name of a text file containing the description of the Turing Machine and the output file name for the results.
+The name TuringTimer can be considered slightly misleading as transitions are counted instead of time, but these transitions can be considered as another type of time measurement as it counts the operations needed to compute the problem and as time is machine specific, counting transitions offers a more generalised description of the problem complexity. 
+Internally the TuringTimer function creates a TM object as described in the previous chapter and increases the problem size step by step. Problem size should not be confused with the input length as they can differ depending on how the problem size is defined. Taking binary addition as an example a problem size of 1 refers to a problem in which the integers added have size one, e.g. "0#0#0". We see that the string has size 5.
 
 The creation of problems is randomised with seed 1234 and fitted to the input file name. The file descriptor is analysed and the problem of the specified size is returned, all returned problems will be accepted ultimately. There is no cleaning of rejected inputs. The output file contains the input which was analysed, the transitions and the problem size.
 
+\newpage
+
 # The Problems
 
-In the subsequent sections 4 problems will be analysed. For each of the problems a unittest class is implemented to prove the validity of the developed TM.
+In the subsequent sections 4 problems will be analysed. For three of the problems a unittest class is implemented to prove the validity of the developed TM. For the last problems references are given to proof the correctness. 
+The four problems are:
+
+1. Palindrome
+2. Binary Addition
+3. Divisibility by three
+4. Busy Beaver 2 state Turing Machines
 
 ## Palindrome
 
-A palindrome is an input string which is equivalent to its reversed version. Hence madam is a palindrome, but Adam is not. For this analysis the alphabet is restrived to {0,1,2}. 
+A palindrome is an input string which is equivalent to its reversed version. Hence madam is a palindrome, but Adam is not. For this analysis the alphabet is restriced to {0,1,2}. 
 The solution has been visualised below in a graph:
+
 ```{r,echo=FALSE,out.width = "80%",fig.align="center"}
 library(png)
 # All defaults
@@ -77,16 +96,16 @@ This implementation could have been improved if there was a two way check implem
 ### Theoretical complexity analysis
 
 With every single correct input, there will always be at least one transition. This is also true for the empty input. This is because the state needs to change at least ones into the accepting state. 
-For an input size of n, the algorithm will read the first input and then traverse until the head points to an empty symbol and then the head will travers back to the start of the string. This means that during the first traversal, there will be n+1 transitions in total. Traversing back will only require n transitions as the initial symbol has been removed from the string. Hence, there will be 1 less transition. This will continue until the input string has been reduced to size 0 and only the empty symbol is left on the tape.
+For an input size of n, the algorithm will read the first input and then traverse until the head points to an empty symbol and then the head will traverse back to the start of the string. This means that during the first traversal, there will be n+1 transitions in total. Traversing back will only require n transitions as the initial symbol has been removed from the string. Hence, there will be 1 less transition. This will continue until the input string has been reduced to size 0 and only the empty symbol is left on the tape.
 Writing out the above described process yields:
 
 \[N = 1+ (n+1) + n + (n-1)+...+ 1 = 1 + \sum_{i=1}^{n}{(n+1-i)} \leq n + n + ...+ n \]
 
-From this, we can conclude the inquality $N \leq n^2$ is true and that the palindrome TM is upper bounded by $O(n^2)$.
+From this, we can conclude the inequality $N \leq n^2$ is true and that the palindrome TM is upper bounded by $O(n^2)$.
 
 ### Experimental complexity analysis
 
-As defined above, input size of 1, will actually be a string of length 2. E.g. the string "22"" is input size one, as it requires one loop in the algorithm. The sampled data is displayed below:
+As defined above, input size of 1, will actually be a string of length 2. E.g. the string "22" is input size one. This is down to the creation when the size parameter attaches two extra characters to the front and end of the string. The sampled data is displayed below:
 
 ```{r,echo=FALSE,fig.align="center"}
 palindrome = read.csv("out/production/CS3052_P2/palindrome_test.csv")
@@ -140,7 +159,7 @@ anova.two.three = anova(fit.two,fit.three)
 print(anova.two.three)
 p_value = anova.two.three$`Pr(>F)`[2]
 ```
-Considering the output of the analysis and in particular the p value of `r p_value` with a low significance for a model without any random factor, one can conclude that the significance of the term raised to the third degree does offer a better fit, but the cost of the extra precision outweight the advantages. Hence the quadratic model is the preferred model.
+Considering the output of the analysis and in particular the p value of `r p_value` with a low significance for a model without any random factor, one can conclude that the significance of the term raised to the third degree does offer a better fit, but the cost of the extra precision outweigh the advantages. Hence the quadratic model is the preferred model.
 
 The conclusion of this analysis is that the experimental analysis of the palindrome algorithm is bounded by a quadratic function.
 
@@ -155,7 +174,7 @@ When implementing this description, care had to be taken when dealing with carri
 knitr::include_graphics("pictures/addition.png")
 ```
 
-The state marked in red describes the accepting state, green is the start state.
+The state marked in red describes the accepting state, green is the start state. One can spot that the graph is roughly split into two very similar areas, this is because a carry is assumed in the lower half.
 
 Given an TM = (Q,$\Sigma$,I,q,$\delta$,F), here we have:
 
@@ -179,13 +198,13 @@ Further, this example has been tested by automatically generated inputs. The aut
 
 Even thought the diagram displays a complicated structure, the underlying moves of the head on the tape are not as complicated to understand. The diagram has such a complex structure because one needs to persist the first value in a state in the first steps and set up an equivalent structure for the case in which there is a carry. 
 Simplifying the structure and yields an algorithm which goes back and forth between the end points and with each iteration the head needs to traverse one symbol less, as the outermost symbols are replaced by the empty symbol.
-As described a problem of size n will yield an input string of size $3*n+2$. As per ususal with complexity analysis, one can drop the constant and one can also drop the factor $3$. Hence:
+As described a problem of size n will yield an input string of size $3*n+2$. As per usual with complexity analysis, one can drop the constant and one can also drop the factor $3$. Hence:
 \[N = (n) + (n-1)+...+ 1 = \sum_{i=1}^{n}{(n-i)} \leq n + n + ...+ n \]
-Similarly to the inital problem we obtain a theoretical complexity, which is upper bounded by $O(n^2)$.
+Similarly to the initial problem we obtain a theoretical complexity, which is upper bounded by $O(n^2)$.
 
 ### Experimental complexity analysis
 
-As defined above, input size of 1, will actually be a string of length $3*n+2 = = 3 * 1 + 2 = 5$. E.g. the string "1#0#1" is input size one, as it is one loop in the algorithm. This is a difference which is not relevant in the theoretical analysis becomes relevant in pratice when predicting the accurate count of transitions. The sampled data is displayed below:
+As defined above, input size of 1, will actually be a string of length $3*n+2 = = 3 * 1 + 2 = 5$. E.g. the string "1#0#1" is input size one, as it is one loop in the algorithm. This is a difference which is not relevant in the theoretical analysis becomes relevant in practice when predicting the accurate count of transitions. The sampled data is displayed below:
 
 ```{r,echo=FALSE,fig.align="center"}
 addition = read.csv("out/production/CS3052_P2/addition_test.csv")
@@ -199,7 +218,7 @@ plot_addition <- function(main){
 plot_addition("Plot of the transitions")
 ```
 
-As the plot looks similar in shape the one observed before when investigating the complexity of the palindrome algorithm, the seems to be no nessecity to investigate the linear model any further.
+As the plot looks similar in shape the one observed before when investigating the complexity of the palindrome algorithm, the seems to be no necessity to investigate the linear model any further.
 
 ```{r fitting_addition, comment="",fig.align="center"}
 # linear model degree 2
@@ -242,7 +261,7 @@ colnames(df) <- c("Size","Observed","Cubic Model","Error","Quadratic Model","Err
 knitr::kable(df)
 ```
 
-Clearly the cubic offers a better fit. However, considering the extra complexity in calculating the model and comparing the differences to the oberserved numbers, the additional value seems small.
+Clearly the cubic offers a better fit. However, considering the extra complexity in calculating the model and comparing the differences to the observed numbers, the additional value seems small.
 
 
 ## Divisibility by 3
@@ -271,9 +290,9 @@ The file describing the very same version encoded in a machine readable format i
 
 The input size is defined to be the length of the string to check.
 
-### Validility of the TM
+### Validity of the TM
 
-The implementation of this TM has been tested with a unittest suite. The test suite is considerably smaller than the other ones, as the small amount of states, requires less coverage. The implemenation passes all tests. 
+The implementation of this TM has been tested with a unittest suite. The test suite is considerably smaller than the other ones, as the small amount of states, requires less coverage. The implementation passes all tests. 
 Further, there have been samples taken from the automatised number generation and a counter check has been done in R if there randomly generated numbers are in fact divisible by 3.
 
 ### Theoretical complexity analysis
@@ -288,7 +307,7 @@ In case a, the string is accepted, in case b, the string is rejected. Hence the 
 ### Experimental complexity analysis
 
 As seen in the theoretical analysis, division by three has a function, which is linear in theory without dropping constants. 
-This straight line is also retrieved when experimenting with divisibilty by 3 in pratice. The plot below plots transitiions agains input sizes.
+This straight line is also retrieved when experimenting with divisibility by 3 in practice. The plot below plots transitions against input sizes.
 
 ```{r,echo=FALSE,fig.align="center"}
 divide = read.csv("src/divisibility_test.csv")
@@ -302,13 +321,13 @@ plot_divide <- function(main){
 plot_divide("Plot of the transitions")
 ```
 
-Given the straight line and the theoretical anlysis, there is no further investigation worth the time and it can be concluded that the problem divisibilty by three has a linear complexity checking time.
+Given the straight line and the theoretical analysis, there is no further investigation worth the time and it can be concluded that the problem divisibility by three has a linear complexity checking time.
 
 
 ## Busy beaver
 
 
-The Busy Beaver is a Turing Machine of a specified input size, which takes as many transitions as possible without entering an infinite loop. As this varys depending on number of states adn the size of the input alphabet, there is one TM for each combination of the above. Known to increase very rapidely, there are four Turing Machines implemented in this analysis. They all have two states, but the size of the alphabet increases from two up to and including five. Another crucial difference to the other problems above is that the busy beaver TM's always start with an empty tape. 
+The Busy Beaver is a Turing Machine of a specified input size, which takes as many transitions as possible without entering an infinite loop. As this varies depending on number of states and the size of the input alphabet, there is one TM for each combination of the above. Known to increase very rapidly, there are four Turing Machines implemented in this analysis. They all have two states, but the size of the alphabet increases from two up to and including five. Another crucial difference to the other problems above is that the busy beaver TM's always start with an empty tape. 
 
 The TM's are all slightly different in their transitions, but have the common characteristic of two states.
 
@@ -329,7 +348,7 @@ From now on the different TM will be referred to as (state,size of input alphabe
 ### Theoretical complexity analysis
 
 The theoretical analysis of the Turing Machines themselves on their own is beyond the scope of this submission, however, there are a few things worth highlighting.
-Firstly, it is fairly easy to grasp the basic concept of the inital (2,2)BB. The TM builds up a row of three ones before finishing. The empty tape develops in the follwing way, where x denotes the empty _:
+Firstly, it is fairly easy to grasp the basic concept of the initial (2,2)BB. The TM builds up a row of three ones before finishing. The empty tape develops in the following way, where x denotes the empty _:
 
 Case | Tape | State
 -----|----- | -----
@@ -343,7 +362,7 @@ Case | Tape | State
 
 The main idea of this TM is to create a string on the tape through which it then has to iterate again. There are 7 cases denoted in the table above, which let us conclude that there will be 6 transitions required to write the 111 string on the tape. According to research, this is as many transitions as possible for a TM with these specifications.
 The idea seems simple for a (2,2)BB, but as soon as the input alphabet is increased by one sign and there is a (2,3)BB the situation becomes more complicated.
-Lafitte published in his 2007 paper, that the maximum amount of transitions are 38 and one will end up with an input string of length 9 on the tape. This is a steep increase for an additional input letter. The idea underlying the (2,3)BB is that the input string of a certain length is written and then the ones and twos will be replaced with each other while iterating throught the string. 
+Lafitte published in his 2007 paper, that the maximum amount of transitions are 38 and one will end up with an input string of length 9 on the tape. This is a steep increase for an additional input letter. The idea underlying the (2,3)BB is that the input string of a certain length is written and then the ones and twos will be replaced with each other while iterating through the string. 
 The same idea applies for the next increase in complexity. The (2,4)BB has already $3932964$ transitions and then the (2,5)BB has $1.9 * 10^{704}$ transitions as published by Ligocki[3]. The count of transitions for the (2,5)BB is so large that the number exceeds the atoms in the observable universe by a factor of more than $10^{600}$ [4]. A number too big to even grasp.
 According to Ligocki a (2,6)BB reaches more than $2.4 * 10^{9866}$ transitions. Both numbers will be put into perspective in the next section.
 
@@ -359,7 +378,7 @@ beavers = read.csv("src/beaver_test.csv")
 knitr::kable(beavers[][1:2])
 ```
 
-The numbers are exactly as expected from the theoretical anlysis. Setting these numbers in perspective to each other gives an impressive plot:
+The numbers are exactly as expected from the theoretical analysis. Setting these numbers in perspective to each other gives an impressive plot:
 
 ```{r,echo=FALSE,fig.align="center"}
 par(mfrow=c(1,2))
@@ -384,7 +403,7 @@ The growth of the number of transitions is difficult to grasp by just looking at
 
 Interestingly, taking the time of the TM with 4 symbols took 2463571311 nanoseconds which are 0.04 minutes. Assuming each transition takes the same amount of time, we can now calculate how much time it would take to theoretically calculate the time for the TM with 5 symbols. This now explains why the theoretical analysis is only a theory but not available in practice. The factor the transitions increase by is roughly $10^798$. However, onlt taking $10^7$ as a factor would lead to a computation almost taking a year. Computing the (2,5)BB would take hundreds of years on the lab machines and even a faster machine would not improve the computational execution to a bearable level.
 
-For an exponential growth this function would need to have the same factors between each increase in step size, which is not the case! This means that the observed busy beaver functions grow faster than an exponential function. Putting the oberserved data into perspective with the maximum value R can compute, which is still much smaller than the theoretical values for (2,5)BB, let alone (2,6)BB, gives the following graphs: 
+For an exponential growth this function would need to have the same factors between each increase in step size, which is not the case! This means that the observed busy beaver functions grow faster than an exponential function. Putting the observed data into perspective with the maximum value R can compute, which is still much smaller than the theoretical values for (2,5)BB, let alone (2,6)BB, gives the following graphs: 
 
 ```{r,echo=FALSE, warning=FALSE,fig.align="center"}
 beavers[nrow(beavers) + 1,] = c(5,2147483647,"_")
@@ -398,23 +417,22 @@ plot_beaver_big <- function(main,max_row){
 plot_beaver_big("Putting the observations into perspective",5)
 ```
 
-This makes the busy beaver TMs interesting and unique. The complexity is so rapidely increasing that a (2,8)BB has yet to be found. The busy beaver function is also regarded as uncomputable for the reasons above.
+This makes the busy beaver TMs interesting and unique. The complexity is so rapidly increasing that a (2,8)BB has yet to be found. The busy beaver function is also regarded as uncomputable for the reasons above.
 
 ## Comparison of the Problems
 
-Before turning to the summary of this chapter, there are a few interesting facts to highlight.
-Notably that the difference in transition count for the Palindrome problem and the Addition is quite noticable even though both are bounded by $O(n^2)$. This is down to the factors involved when conducting the experiements and the factors dropped when defining input size. Especially dropping the factor multiplication factor from the definition for the length of the input string of the addition problem causes a strong level of skewness in when comparing the results. To compare the problems the problem size needs ot be defined more stringent.
+Before turning to the summary of this chapter, there are a few interesting facts to highlight. Notably that the difference in transition count for the Palindrome problem and the Addition is quite noticeable even though both are bounded by $O(n^2)$. This is down to the factors involved when conducting the experiments and the factors dropped when defining input size. Especially dropping the factor multiplication factor from the definition for the length of the input string of the addition problem causes a strong level of skewness in when comparing the results. To compare the problems the problem size needs ot be defined more stringent.
 
 ## Summary
 
-The four problems present are four very different algorithms with different complexities presenting the power and variablilty of Turing Machines. The given problems in the specifications display how the complexity of seemingly easy tasks become more difficult when just one tape is available and the problem size increases. On the first look checking an addition for a correct solution seems a lot more difficult than a palindrome check, but as seen above both are bounded by the same $O(.)$. Finally, the divisibilty check shows how even simple TMs can produce helpful tasks and the busy beavers provide an excourse into the threoretical field of general computational bounds.
+The four problems present are four very different algorithms with different complexities presenting the power and variablilty of Turing Machines. The given problems in the specifications display how the complexity of seemingly easy tasks become more difficult when just one tape is available and the problem size increases. On the first look checking an addition for a correct solution seems a lot more difficult than a palindrome check, but as seen above both are bounded by the same $O(.)$. Finally, the divisibility check shows how even simple TMs can produce helpful tasks and the busy beavers provide a taster into the theoretical field of general computational bounds.
 
 
 # Non deterministic TM
 
 Another interesting thought is to simulate a non-deterministic Turing Machine NTM with a deterministic Turing Machine. One of the most striking differences and most defining factor of a NTM is the "guessing" ability of the NTM. The NTM can be in multiple states at the same time and will accept the input when one of the different routes will lead to an accepting state. In an idealised world all of these different paths would be executed in parrallel, allowing exponential algorithms to be run in polynomial time, which would be a breakthrough for many computational intensive processes. 
 
-There are multiple ways to enocde this into a non deterministic machine:
+There are multiple ways to encode this into a non deterministic machine:
 
 1. Multiple configuration states: Creating a list of states the Turing Machine is in.
 2. A three tape approach in which each tape serves its purpose in computing the input string and saving the state.
@@ -423,12 +441,12 @@ For the purpose of this submission, a forked version of the first of the two app
 
 ## Design
 
-The design is very similar to the design of the TM in the first tasks, however, this time the function to execute the next steps is called recursively on the same object. This allows the progress to bounce back and procees from the latest valid state to try to the next possible transition in this state.
-The design also uses HashSets to keep all states and transitions in order.
+The design is very similar to the design of the TM in the first tasks, however, this time the function to execute the next steps is called recursively on the same object. However, the current state of the tape, the current head position and the current state do not count for the whole TM anymore, but are only valid for the lifetime of the variable within the function. The design still uses HashSets to keep all states and transitions in order.
+This allows the progress to bounce back and proceed from the latest valid state to try to the next possible transition from that state. It will fail if the possibilities of transitions run out, if from the original call no paths succeed, than the whole input will be rejected. 
 
-## Problem 1
+## Binary word
 
-The problem to regognize a string with an unlimited amount of 0's and 1's before the string ends in 01 has been chose. This problem already occured in lectures and allows to demonstrate the advantage of a NTM over a TM. Note that this could also be encoded in an NFA. 
+The problem to recognize a string with an unlimited amount of 0's and 1's before the string ends in 01 has been chose. This problem already occurred in lectures and allows to demonstrate the advantage of a NTM over a TM. Note that this could also be encoded in an NFA. The description is included in the file "ntm_language.txt".
 
 The NTM has the following transition graph:
 
@@ -450,21 +468,45 @@ Please note that what makes this problem non deterministic is the fact that in s
 
 ### Theoretical Analysis
 
+In non deterministic Turing machines the underlying assumption is that the Turing Machine always makes the perfect guess. Hence, we can discard all the wrong guesses in this case.
+For an input of size of n, the NTM will iterate through all the different digits in the binary string. After the last integer the NTM will either accept the string or fail. This will give the NTM exactly n transitions. Hence, this complexity is bounded by $O(n)$. 
+This NTM could also be easily implemented as a deterministic Turing Machine. This has a theoretical justification as shown by Sipser [5]. The most interesting difference between the two implementations of this problem, which could be implemented as deterministic finite state automata, is the count of total possible transitions between states involved. The deterministic version of the algorithm is displayed below:
+
+```{r,echo=FALSE, out.height="80%",fig.align="center"}
+# All defaults
+knitr::include_graphics("pictures/dtm.png")
+```
+The differences are striking: Fewer transitions have to be specified in the NTM while the outcome will be the same.
+As per usual the simpler model is the favoured model if the same outcome is achieved and this is were the power of a NTM comes in even for deterministic TM solutions.
+
 ### Experimental Analysis
 
-Computing this non - deterministic problem can in fact yield multiple paths. The best way to display the path is a tree. Given the string ... we can compute the following graph with the different endpoints. The same tree structure can be found below in the output of the program for the exact same string.
+Computing this non - deterministic problem can in fact yield multiple paths. The best way to display the path is a tree. Given the string "001001" we can compute the following graph with the different endpoints. 
+
+```{r,echo=FALSE, out.height="50%",fig.align="center"}
+# All defaults
+knitr::include_graphics("pictures/tree.png")
+```
+
+The encoded NTM will also iterate through the same tree. We see in this case that the input length is 6 and that the shortest path in tree is also 6 transitions long. The encoded NTM will also offer a similar insight into the processes and a screenshot has been attached in the appendix.
+The relation $inputsize \approx transitions$ was not subject to change. Hence, this problems grows linearly with input size.
 
 # Conclusion
 
-This report has shown how versatile Turing Machines are. In particular the set of problems which can be encoded into a one tape Turing Machine problem and the different performances of those algorithms. The limits of these complexities are set by the busy beaver functions growing faster than any other computable function. Ultimately, non-deterministic Turing Machines do not extend the field of computable problems, but offer a theoretical shortcut to many problems.
+This report has shown how versatile Turing Machines are. In particular the set of problems which can be encoded into a one tape Turing Machine problem and the different performances of those algorithms. The limits of these complexities are set by the busy beaver functions growing faster than any other computable function. Another important conclusion can be drawn from the results, which is that non-deterministic Turing Machines do not extend the field of computable problems, but offer a theoretical shortcut to many problems.
 
-
-# Bibiliography
+# Bibliography
 [1] Rado T. (1963) On a simple source for non-computable functions in: Proceedings of the Symposium on Mathematical Theory of Automata, April 1962, Polytechnic Institute of Brooklyn, April 1963, 75-81.  
 [2] Lafitte G. and Papazian C. (2007) The fabric of small Turing machines
 in: Computation and Logic in the Real World, Proceedings of the Third Conference on Computability in Europe, June 2007, 219-227.   
 [3] Michel P. (2017) The Busy Beaver Competition: a historical survey   
 [4] Universe today, How many atoms are there in the universe? (2009) https://www.universetoday.com/36302/atoms-in-the-universe/  
+[5] Sipser, Introduction to the Theory of Computation
 
-http://turingmachine.io/
-http://www.logique.jussieu.fr/~michel/ha.html
+# Appendix
+Output for a NTM; the NTM bounces back to the last valid state when no valid transition is found
+
+```{r,echo=FALSE, out.height="50%",fig.align="center"}
+# All defaults
+knitr::include_graphics("pictures/ntm_screenshot.png")
+```

@@ -1,53 +1,38 @@
-import java.math.BigInteger;
-
 public class Main {
 
     public static void main(String[] args) {
-
+        // given commands
         String TM_description = args[0];
-        String input_file = args[1];
+        String input_string = args[1];
+        String machine = args[2];
+
         TuringMachineFactory TMF = new TuringMachineFactory();
+        // build TM
         TuringMachine TM = TMF.BuildTuringMachine(TM_description);
+        // build NTM from TM
         NTM ntm = new NTM(TM.getStates(), TM.getTransitionTable(), TM.getStartState(), TM.getAcceptingStates());
-        System.out.println(ntm.getStates());
-        System.out.println(ntm.getTransitionTable());
-        //TM.Run("_",true);
-        System.out.println(ntm.Run(true, "001", ntm.getStartState(), 0));
-        // for later
-        //TimeTaker timeTaker = new TimeTaker();
-        //timeTaker.BeaverTuringTimer("beaver_test.csv");
-        //timeTaker.TuringTimer(1, 250, "divide.txt", "divisibility_test.csv");
-        // palindrome file
-        //timeTaker.TuringTimer(1, 250, "palindrome.txt", "palindrome_test.csv");
 
-        // addition file
-        //timeTaker.TuringTimer(1, 250, "addition.txt", "addition_test.csv");
-
-    }
-
-
-    private static String reverseBinaryString(String binary) {
-        char[] content = binary.toCharArray();
-        int j = content.length - 1;
-        for (int i = 0; i < j; i++, j--) {
-            char temp = content[i];
-            content[i] = content[j];
-            content[j] = temp;
+        if (machine.equals("NTM")) {
+            System.out.println(ntm.Run(true, input_string, ntm.getStartState(), 0));
+        } else {
+            if (machine.equals("Test")) {
+                // for later
+                TimeTaker timeTaker = new TimeTaker();
+                // busy beaver
+                System.out.println("Beavers");
+                timeTaker.BeaverTuringTimer("beaver_test.csv");
+                // divisibility
+                System.out.println("Divisibility");
+                timeTaker.TuringTimer(1, 250, "divide.txt", "divisibility_test.csv");
+                // palindrome file
+                System.out.println("Palindrome");
+                timeTaker.TuringTimer(1, 250, "palindrome.txt", "palindrome_test.csv");
+                // addition file
+                System.out.println("Addition");
+                timeTaker.TuringTimer(1, 250, "addition.txt", "addition_test.csv");
+            } else {
+                System.out.println(TM.Run(input_string, true));
+            }
         }
-        return new String(content);
     }
-
-    private static String divideInputCreator(int size) {
-        BigInteger big = new BigInteger("1");
-        BigInteger three = new BigInteger("3");
-        do {
-            big = big.multiply(three);
-            System.out.println(big.bitLength());
-            System.out.println(big);
-            System.out.println("---------------");
-        } while (reverseBinaryString(big.toString(2)).length() < size);
-        return reverseBinaryString(big.toString(2));
-    }
-
-
 }

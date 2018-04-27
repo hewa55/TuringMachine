@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class TuringMachineFactory {
     public TuringMachine BuildTuringMachine(String TM_description){
-
+        // parse the input file
         TuringMachine TM = new TuringMachine();
         try{
             FileReader fileReader = new FileReader(TM_description);
@@ -30,6 +30,8 @@ public class TuringMachineFactory {
         return TM;
     }
     private static void addStates(TuringMachine TM, int nStates, BufferedReader bufferedReader) throws IOException{
+
+
         String line = "";
 
         for (int i = 0; i < nStates; i++) {

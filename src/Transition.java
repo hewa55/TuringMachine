@@ -1,4 +1,5 @@
 public class Transition {
+    /// class representing a transition in the TM
     private String readState;
     private char readSymbol;
 

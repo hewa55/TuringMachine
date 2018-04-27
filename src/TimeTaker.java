@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class TimeTaker {
     public void TuringTimer(int startSize, int endSize, String TM_description, String file_name) {
+        // creates a table with input size transitions and the input string
         TuringMachineFactory TMF = new TuringMachineFactory();
         TuringMachine TM = TMF.BuildTuringMachine(TM_description);
 
@@ -31,6 +32,7 @@ public class TimeTaker {
                 writer.append(",");
                 writer.append(Integer.toString(transitions));
                 writer.append(",");
+                // : otherwise excel transforms the given strings into numbers and processes them
                 writer.append(":" + input);
                 writer.append('\n');
             }
@@ -43,6 +45,7 @@ public class TimeTaker {
     }
 
     public void BeaverTuringTimer(String file_name) {
+        // reads in the busy beaver files and runs them until a halt state is reached
         try {
 
             FileWriter writer;
@@ -60,6 +63,7 @@ public class TimeTaker {
                 System.out.println(i);
                 TuringMachine TM = TMF.BuildTuringMachine("busy_beaver_" + i + ".txt");
                 long start = System.nanoTime();
+                // always start with an empty string
                 int transitions = TM.Run("_", false);
                 System.out.println(System.nanoTime() - start);
                 writer.append(Integer.toString(i));
@@ -102,12 +106,14 @@ public class TimeTaker {
         if (size < 1) {
             return "##";
         }
+        // randomly create the next INT: 1 or 0
         for (int i = 0; i < size; i++) {
             int temp1 = rand.nextInt(2);
             int temp2 = rand.nextInt(2);
             s1 = s1 + temp1;
             s2 = s2 + temp2;
         }
+        // transform into an integer
         BigInteger first = new BigInteger(s1, 2);
         BigInteger second = new BigInteger(s2, 2);
 
@@ -119,7 +125,7 @@ public class TimeTaker {
             result = first.add(second);
         }
         String binaryStringResult = result.toString(2);
-
+        // reverse string (least signifanct bit first
         String reverseBinaryString1 = reverseBinaryString(s1);
         String reverseBinaryString2 = reverseBinaryString(s2);
         String reverseBinaryStringResult = reverseBinaryString(binaryStringResult);
@@ -128,6 +134,7 @@ public class TimeTaker {
     }
 
     public String PalindromeInputCreator(int size, Random rand) {
+        // attach 0,2,1 to a string
         String input = "";
         for (int i = 0; i < size; i++) {
             int num = rand.nextInt(3);
@@ -141,9 +148,7 @@ public class TimeTaker {
         BigInteger three = new BigInteger("3");
         do {
             big = big.multiply(three);
-            System.out.println(big.bitLength());
-            System.out.println(big);
-            System.out.println("---------------");
+            // test when binary representation has required length then stop
         } while (reverseBinaryString(big.toString(2)).length() < size);
         return reverseBinaryString(big.toString(2));
     }

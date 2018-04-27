@@ -44,7 +44,7 @@ public class NTM {
         if (steps) {
             System.out.println(Tape + " in " + CurrentState + " at symbol " + CurrentSymbol + " which is " + Tape.charAt(CurrentSymbol));
         }
-
+        // when recursion should stop
         if (acceptingStates.contains(CurrentState)) {
             return 1;
         }
@@ -71,6 +71,7 @@ public class NTM {
             Iterator<Transition> possibleIterator = possibleTransitions.iterator();
             while (possibleIterator.hasNext()) {
                 Transition possibility = possibleIterator.next();
+                // consider next transition possibility
                 String FutureState = possibility.getWriteState();
                 int FutureSymbol = CurrentSymbol;
                 StringBuilder tape = new StringBuilder(Tape);
@@ -101,11 +102,10 @@ public class NTM {
                 }
 
             }
-            System.out.println("do I reach this?");
 
         }
 
-        return 1;
+        return -1;
     }
 
     public HashSet<String> getStates() {
@@ -120,21 +120,4 @@ public class NTM {
         return StartState;
     }
 
-    public void printTM() {
-        Iterator<String> states = this.States.iterator();
-        while (states.hasNext()) {
-            System.out.println(states.next());
-        }
-        Iterator<Transition> transitionIterator = this.TransitionTable.iterator();
-        while (transitionIterator.hasNext()) {
-            Transition trans = transitionIterator.next();
-            System.out.println("read state:" + trans.getReadState());
-            System.out.println("read sym:" + trans.getReadSymbol());
-            System.out.println("write state:" + trans.getWriteState());
-            System.out.println("write sym:" + trans.getWriteSymbol());
-            System.out.println("move dir:" + trans.getMoveDirection());
-            System.out.println("---------");
-
-        }
-    }
 }
