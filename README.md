@@ -3,4 +3,4 @@ A turing machine is the model on which a moderin computer is built. It was devel
 Today it has multiple states and trainsitions, dealing with inputs appropriately.
 
 ## Examples in this Repository
-This implementation contains the complexitly analysis of different problems which can be found in detail in the description pdf given in the repository.
+This implementation contains the complexitly analysis of different problems which can be found in detail in the report markdown file given in the repository.
