@@ -1,4 +1,6 @@
-# CS3052_P2
-Practical 2 for computational complextity. Contains Turing machine
+# Turing Machine
+A turing machine is the model on which a moderin computer is built. It was developed by Alan Turing and was a mechnical machine during its development. 
+Today it has multiple states and trainsitions, dealing with inputs appropriately.
 
-https://gist.github.com/NikolasTzimoulis/2846116
+## Examples in this Repository
+This implementation contains the complexitly analysis of different problems which can be found in detail in the description pdf given in the repository.
